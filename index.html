@@ -659,12 +659,86 @@
     </div>
   </section>
 
+  <!-- Trust / Privacy Section -->
+  <section style="padding:100px 48px;background:var(--bg);border-top:1px solid var(--border)">
+    <div style="max-width:900px;margin:0 auto">
+      <p style="font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--teal);text-align:center;margin-bottom:16px">Privasi & Keamanan</p>
+      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;text-align:center;letter-spacing:-1px;margin-bottom:16px">Gimana data kamu<br/>mengalir?</h2>
+      <p style="text-align:center;color:var(--muted);font-size:15px;margin-bottom:64px;font-weight:300">Transparan 100% — ini yang terjadi saat kamu kirim pesan ke Nalar</p>
+
+      <!-- Data flow -->
+      <div style="display:flex;flex-direction:column;gap:0;position:relative;max-width:600px;margin:0 auto 64px">
+        <!-- Flow items -->
+        <div style="display:flex;gap:24px;align-items:flex-start;padding-bottom:40px;position:relative">
+          <div style="width:44px;height:44px;border-radius:50%;background:var(--teal);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;z-index:1">📸</div>
+          <div style="position:absolute;left:21px;top:44px;bottom:0;width:2px;background:linear-gradient(to bottom,var(--teal),transparent)"></div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:4px">Kamu pencet tombol kirim</div>
+            <div style="color:var(--muted);font-size:14px;line-height:1.6;font-weight:300">Screenshot layar diambil <strong style="color:var(--text)">hanya saat itu</strong> — bukan terus-menerus. Kalau toggle screenshot dimatiin, ga ada screenshot sama sekali.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:24px;align-items:flex-start;padding-bottom:40px;position:relative">
+          <div style="width:44px;height:44px;border-radius:50%;background:var(--teal);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;z-index:1">🔐</div>
+          <div style="position:absolute;left:21px;top:44px;bottom:0;width:2px;background:linear-gradient(to bottom,var(--teal),transparent)"></div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:4px">Dikirim ke Anthropic (Claude)</div>
+            <div style="color:var(--muted);font-size:14px;line-height:1.6;font-weight:300">Screenshot + pertanyaan kamu dikirim ke <strong style="color:var(--text)">Claude API milik Anthropic</strong> — perusahaan AI terpercaya. Koneksi terenkripsi HTTPS. Bukan server Nalar, bukan server random.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:24px;align-items:flex-start;padding-bottom:40px;position:relative">
+          <div style="width:44px;height:44px;border-radius:50%;background:var(--teal);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;z-index:1">💬</div>
+          <div style="position:absolute;left:21px;top:44px;bottom:0;width:2px;background:linear-gradient(to bottom,var(--teal),transparent)"></div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:4px">Nalar jawab, selesai</div>
+            <div style="color:var(--muted);font-size:14px;line-height:1.6;font-weight:300">Jawaban muncul di overlay. <strong style="color:var(--text)">Screenshot ga disimpen</strong> — di komputer kamu, di server Nalar, maupun di Anthropic (setelah diproses).</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:24px;align-items:flex-start">
+          <div style="width:44px;height:44px;border-radius:50%;background:var(--teal);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">✅</div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:4px">Chat history — lokal di kamu</div>
+            <div style="color:var(--muted);font-size:14px;line-height:1.6;font-weight:300">Riwayat chat tersimpan <strong style="color:var(--text)">di komputermu sendiri</strong>, bukan di cloud kami. Uninstall app = semua data hilang.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust badges -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;display:flex;gap:16px;align-items:center">
+          <span style="font-size:28px">🚫</span>
+          <div>
+            <div style="font-weight:600;font-size:14px;margin-bottom:2px">Ga ada server kami</div>
+            <div style="color:var(--muted);font-size:13px;font-weight:300">Data ga lewat server Nalar sama sekali</div>
+          </div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;display:flex;gap:16px;align-items:center">
+          <span style="font-size:28px">👁️</span>
+          <div>
+            <div style="font-weight:600;font-size:14px;margin-bottom:2px">Screenshot on-demand</div>
+            <div style="color:var(--muted);font-size:13px;font-weight:300">Kamu yang kontrol kapan Nalar bisa liat</div>
+          </div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;display:flex;gap:16px;align-items:center">
+          <span style="font-size:28px">🔒</span>
+          <div>
+            <div style="font-weight:600;font-size:14px;margin-bottom:2px">Enkripsi HTTPS</div>
+            <div style="color:var(--muted);font-size:13px;font-weight:300">Semua koneksi ke Anthropic terenkripsi</div>
+          </div>
+        </div>
+      </div>
+
+      <p style="text-align:center;margin-top:32px;font-size:14px;color:var(--muted)">
+        Baca selengkapnya di <a href="privacy.html" style="color:var(--teal);text-decoration:underline">Kebijakan Privasi</a> kami
+      </p>
+    </div>
+  </section>
+
   <footer>
     <div class="wordmark-text" style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;letter-spacing:-1px">
       <span class="w-n">N</span><span class="w-a1">a</span><span class="w-l">l</span><span class="w-a2">a</span><span class="w-r">r</span><span class="w-dot" style="color:var(--muted)">.</span><span class="w-ai" style="color:var(--teal);font-weight:400">ai</span>
     </div>
     <p>Dibuat dengan ❤️ untuk developer Indonesia</p>
-    <p>Beta v0.1.0</p>
+    <p style="font-size:13px;color:var(--muted)"><a href="privacy.html" style="color:var(--muted);text-decoration:none">Kebijakan Privasi</a> · Beta v0.1.0</p>
   </footer>
 
 </body>
