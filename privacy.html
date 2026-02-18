@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kebijakan Privasi — Nalar AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal: #0ea5a0; --bg: #060d10; --bg2: #0c1a1f;
+      --surface: #111e26; --border: #1a3040;
+      --text: #e8f4f4; --muted: #6a9aaa;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px; border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; text-decoration: none; color: var(--text); }
+    .nav-logo span { color: var(--teal); }
+    .nav-back { color: var(--muted); font-size: 14px; text-decoration: none; transition: color 0.2s; }
+    .nav-back:hover { color: var(--teal); }
+
+    .container { max-width: 720px; margin: 0 auto; padding: 80px 48px; }
+
+    .page-tag {
+      display: inline-block; font-size: 11px; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--teal);
+      border: 1px solid rgba(14,165,160,0.3); padding: 4px 12px;
+      border-radius: 20px; margin-bottom: 24px;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800;
+      letter-spacing: -2px; margin-bottom: 16px; line-height: 1.1;
+    }
+
+    .last-updated { color: var(--muted); font-size: 14px; margin-bottom: 64px; font-weight: 300; }
+
+    /* TL;DR box */
+    .tldr {
+      background: rgba(14,165,160,0.08); border: 1px solid rgba(14,165,160,0.25);
+      border-radius: 16px; padding: 32px; margin-bottom: 64px;
+    }
+    .tldr-title {
+      font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700;
+      color: var(--teal); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .tldr ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .tldr li { display: flex; gap: 10px; font-size: 15px; color: var(--text); }
+    .tldr li::before { content: '✓'; color: var(--teal); font-weight: 700; flex-shrink: 0; }
+
+    /* Sections */
+    .section { margin-bottom: 56px; }
+    h2 {
+      font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700;
+      margin-bottom: 16px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    p { color: var(--muted); font-size: 15px; margin-bottom: 16px; font-weight: 300; line-height: 1.8; }
+    p strong { color: var(--text); font-weight: 500; }
+
+    .highlight-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px 24px; margin: 20px 0;
+      font-size: 15px; color: var(--muted);
+    }
+    .highlight-box strong { color: var(--teal); }
+
+    /* Data flow visual */
+    .flow { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+    .flow-item {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding-bottom: 28px; position: relative;
+    }
+    .flow-item:not(:last-child)::after {
+      content: ''; position: absolute; left: 15px; top: 32px; bottom: 0;
+      width: 2px; background: linear-gradient(to bottom, var(--teal), transparent);
+    }
+    .flow-dot {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(14,165,160,0.15); border: 1px solid var(--teal);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0; z-index: 1;
+    }
+    .flow-text { font-size: 14px; color: var(--muted); padding-top: 6px; line-height: 1.6; }
+    .flow-text strong { color: var(--text); }
+
+    footer {
+      padding: 32px 48px; border-top: 1px solid var(--border);
+      text-align: center; color: var(--muted); font-size: 13px;
+    }
+    footer a { color: var(--teal); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">🧠 Nalar<span>.ai</span></a>
+  <a class="nav-back" href="index.html">← Kembali ke beranda</a>
+</nav>
+
+<div class="container">
+
+  <div class="page-tag">Kebijakan Privasi</div>
+  <h1>Privasi kamu<br/>itu urusan kamu</h1>
+  <p class="last-updated">Terakhir diperbarui: Februari 2026 · Bahasa Indonesia</p>
+
+  <!-- TL;DR -->
+  <div class="tldr">
+    <div class="tldr-title">⚡ Versi singkatnya (TL;DR)</div>
+    <ul>
+      <li>Kami ga punya server — data kamu ga lewat kami sama sekali</li>
+      <li>Screenshot hanya dikirim saat kamu pencet tombol kirim, bukan otomatis</li>
+      <li>Data dikirim langsung ke Anthropic (Claude), bukan disimpen kami</li>
+      <li>Riwayat chat tersimpan lokal di komputermu, bukan di cloud</li>
+      <li>Kamu bisa matiin screenshot kapanpun lewat toggle di app</li>
+      <li>Kami ga jual, ga share, ga monetisasi data kamu</li>
+    </ul>
+  </div>
+
+  <!-- Section 1 -->
+  <div class="section">
+    <h2>1. Siapa kami</h2>
+    <p>Nalar AI adalah aplikasi desktop yang membantu kamu bekerja lebih produktif dengan AI. Nalar dibuat oleh developer independen Indonesia dan ditujukan untuk pengguna Indonesia.</p>
+    <p>Kalau ada pertanyaan soal privasi, kamu bisa hubungi kami di <strong>@pakenalar</strong> di Instagram.</p>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="section">
+    <h2>2. Data apa yang terlibat</h2>
+    <p>Saat kamu pakai Nalar, ini yang terjadi secara teknis:</p>
+    
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-dot">📸</div>
+        <div class="flow-text"><strong>Screenshot layar</strong> — diambil hanya saat kamu menekan tombol kirim. Kalau toggle "Kirim screenshot layar" dimatikan, tidak ada screenshot yang diambil sama sekali.</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot">💬</div>
+        <div class="flow-text"><strong>Teks pertanyaan kamu</strong> — pesan yang kamu ketik di kolom chat.</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot">🔐</div>
+        <div class="flow-text"><strong>Dikirim ke Anthropic via API</strong> — screenshot + teks dikirim langsung ke Claude API milik Anthropic melalui koneksi HTTPS terenkripsi. Data ini tidak melewati server Nalar karena kami tidak punya server.</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot">✅</div>
+        <div class="flow-text"><strong>Jawaban kembali ke kamu</strong> — selesai. Tidak ada yang disimpan di sisi Nalar.</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <strong>Penting:</strong> Riwayat chat tersimpan secara lokal di komputer kamu (bukan di cloud atau server kami). Kalau kamu uninstall Nalar, semua riwayat chat ikut terhapus.
+    </div>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="section">
+    <h2>3. Apa yang kami TIDAK lakukan</h2>
+    <p>Ini yang <strong>tidak</strong> kami lakukan dengan data kamu:</p>
+    <div class="highlight-box">
+      🚫 Kami tidak menyimpan screenshot kamu di server kami<br/><br/>
+      🚫 Kami tidak merekam layar kamu secara terus-menerus<br/><br/>
+      🚫 Kami tidak menjual data kamu ke pihak ketiga<br/><br/>
+      🚫 Kami tidak menggunakan data kamu untuk keperluan iklan<br/><br/>
+      🚫 Kami tidak bisa mengakses data kamu karena memang tidak punya server
+    </div>
+  </div>
+
+  <!-- Section 4 -->
+  <div class="section">
+    <h2>4. Anthropic & Claude API</h2>
+    <p>Nalar menggunakan Claude API dari Anthropic untuk memproses pertanyaan dan screenshot kamu. Artinya, data yang kamu kirim tunduk juga pada <a href="https://www.anthropic.com/privacy" target="_blank" style="color:var(--teal)">Kebijakan Privasi Anthropic</a>.</p>
+    <p>Anthropic adalah perusahaan AI yang berbasis di Amerika Serikat dan telah dipercaya oleh jutaan pengguna di seluruh dunia. Mereka tidak menjual data pengguna dan memiliki standar keamanan yang ketat.</p>
+    <div class="highlight-box">
+      <strong>Analoginya:</strong> Ini seperti kamu screenshot sesuatu lalu kirim ke WhatsApp — bedanya tujuannya adalah Claude (AI dari Anthropic), bukan kontak WhatsApp. Prosesnya sama, tingkat keamanannya setara.
+    </div>
+  </div>
+
+  <!-- Section 5 -->
+  <div class="section">
+    <h2>5. Kontrol yang kamu punya</h2>
+    <p>Kamu punya kendali penuh atas data kamu saat menggunakan Nalar:</p>
+    <p><strong>Toggle screenshot:</strong> Kamu bisa matikan fitur screenshot kapanpun. Saat toggle dimatikan, Nalar tidak mengambil atau mengirim gambar apapun — hanya teks pertanyaanmu.</p>
+    <p><strong>Hapus riwayat chat:</strong> Ada tombol hapus (🗑) di dalam app untuk menghapus riwayat percakapan kapanpun kamu mau.</p>
+    <p><strong>Uninstall:</strong> Menghapus Nalar dari komputermu akan menghapus semua data lokal yang tersimpan.</p>
+  </div>
+
+  <!-- Section 6 -->
+  <div class="section">
+    <h2>6. Perubahan kebijakan ini</h2>
+    <p>Kalau ada perubahan pada kebijakan privasi ini, kami akan mengumumkannya melalui Instagram <strong>@pakenalar</strong>. Kami berkomitmen untuk selalu transparan tentang bagaimana data kamu diproses.</p>
+  </div>
+
+  <!-- Section 7 -->
+  <div class="section">
+    <h2>7. Hubungi kami</h2>
+    <p>Ada pertanyaan? Concern? Atau mau laporkan sesuatu? Reach out ke kami:</p>
+    <div class="highlight-box">
+      📸 Instagram: <strong style="color:var(--teal)">@pakenalar</strong><br/><br/>
+      Kami biasanya respond dalam 24 jam.
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>🧠 <a href="index.html">Nalar.ai</a> · Dibuat untuk Indonesia · <a href="index.html">Kembali ke beranda</a></p>
+</footer>
+
+</body>
+</html>
