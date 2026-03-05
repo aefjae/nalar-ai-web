@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Auri — Choose Your Companion</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --dark: #0E0E12;
+  --surface: #16161C;
+  --surface2: #1E1E26;
+  --border: rgba(255,255,255,0.08);
+  --text: #F0F0F5;
+  --muted: #7A7A8C;
+  --red: #FF4D4D;
+  --yellow: #FFB830;
+  --green: #4CAF82;
+  --blue: #4D9EFF;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  background: var(--dark);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* Nav */
+nav {
+  position: sticky; top: 0; z-index: 50;
+  padding: 18px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(14,14,18,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-size: 22px; font-weight: 900; letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.6) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  text-decoration: none;
+}
+
+.nav-right { display: flex; align-items: center; gap: 20px; }
+
+.nav-link {
+  font-size: 13px; color: var(--muted); background: none; border: none;
+  font-family: inherit; cursor: pointer; transition: color 0.2s; text-decoration: none;
+}
+.nav-link:hover { color: var(--text); }
+
+/* Main */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px 48px 96px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.page-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 900;
+  letter-spacing: -2.5px;
+  line-height: 1.0;
+  margin-bottom: 16px;
+}
+
+.page-title em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+  background: linear-gradient(135deg, var(--yellow) 0%, var(--red) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.page-sub {
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Cards grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.char-card {
+  border-radius: 28px;
+  padding: 36px 32px 32px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.23,1,0.32,1), box-shadow 0.3s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.char-card:hover { transform: translateY(-6px); box-shadow: 0 32px 64px rgba(0,0,0,0.4); }
+
+.char-red { background: linear-gradient(135deg, rgba(255,77,77,0.12) 0%, rgba(255,77,77,0.04) 100%); border: 1px solid rgba(255,77,77,0.25); }
+.char-yellow { background: linear-gradient(135deg, rgba(255,184,48,0.12) 0%, rgba(255,184,48,0.04) 100%); border: 1px solid rgba(255,184,48,0.25); }
+.char-green { background: linear-gradient(135deg, rgba(76,175,130,0.12) 0%, rgba(76,175,130,0.04) 100%); border: 1px solid rgba(76,175,130,0.25); }
+.char-blue { background: linear-gradient(135deg, rgba(77,158,255,0.12) 0%, rgba(77,158,255,0.04) 100%); border: 1px solid rgba(77,158,255,0.25); }
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.char-avatar-wrap {
+  width: 100px;
+  height: 120px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.card-identity { flex: 1; padding-top: 8px; }
+
+.char-name {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+.char-red .char-name { color: var(--red); }
+.char-yellow .char-name { color: var(--yellow); }
+.char-green .char-name { color: var(--green); }
+.char-blue .char-name { color: var(--blue); }
+
+.char-type {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.char-traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.trait {
+  font-size: 11px; font-weight: 600;
+  padding: 4px 10px; border-radius: 100px;
+  background: rgba(255,255,255,0.06);
+  color: var(--muted);
+}
+
+.char-description {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+
+.char-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.example-bubble {
+  font-size: 13px;
+  font-style: italic;
+  color: var(--text);
+  background: rgba(255,255,255,0.05);
+  border-left: 2px solid;
+  padding: 8px 12px;
+  border-radius: 0 8px 8px 0;
+  line-height: 1.5;
+}
+.char-red .example-bubble { border-color: var(--red); }
+.char-yellow .example-bubble { border-color: var(--yellow); }
+.char-green .example-bubble { border-color: var(--green); }
+.char-blue .example-bubble { border-color: var(--blue); }
+
+.btn-choose {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  margin-top: auto;
+}
+.char-red .btn-choose { border-color: var(--red); color: var(--red); }
+.char-red .btn-choose:hover { background: var(--red); color: #fff; }
+.char-yellow .btn-choose { border-color: var(--yellow); color: var(--yellow); }
+.char-yellow .btn-choose:hover { background: var(--yellow); color: var(--dark); }
+.char-green .btn-choose { border-color: var(--green); color: var(--green); }
+.char-green .btn-choose:hover { background: var(--green); color: var(--dark); }
+.char-blue .btn-choose { border-color: var(--blue); color: var(--blue); }
+.char-blue .btn-choose:hover { background: var(--blue); color: #fff; }
+
+/* Surprise me */
+.surprise-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.surprise-divider {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+.surprise-divider::before, .surprise-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+.btn-surprise {
+  width: 100%;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+.btn-surprise:hover {
+  border-color: rgba(255,255,255,0.2);
+  background: var(--surface2);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+}
+
+/* Loading overlay */
+.loading-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(14,14,18,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+}
+.loading-overlay.visible { display: flex; }
+.loading-spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 15px; color: var(--muted); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  main { padding: 48px 20px 80px; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .page-title { letter-spacing: -1.5px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Auri</a>
+  <div class="nav-right">
+    <button class="nav-link" id="signout-btn">Sign out</button>
+  </div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <div class="page-eyebrow">Step 1 of 1</div>
+    <h1 class="page-title">Choose your<br/><em>companion</em></h1>
+    <p class="page-sub">Each Auri has a distinct personality. Pick the one that feels right — or let the universe decide.</p>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- RAZE (Red) -->
+    <div class="char-card char-red" id="card-raze">
+      <div class="card-top">
+        <div class="char-avatar-wrap">
+          <svg width="100" height="120" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 150 Q10 110 30 105 L60 100 L90 105 Q110 110 110 150Z" fill="#2A1515"/>
+            <rect x="50" y="82" width="20" height="22" rx="6" fill="#FFCBA4"/>
+            <path d="M30 105 L60 120 L90 105" stroke="#FF4D4D" stroke-width="3" fill="none"/>
+            <ellipse cx="60" cy="60" rx="34" ry="38" fill="#FFCBA4"/>
+            <path d="M36 75 Q60 92 84 75" stroke="#F0B090" stroke-width="2" fill="none" opacity="0.5"/>
+            <ellipse cx="47" cy="55" rx="7" ry="6" fill="#1A0A0A"/>
+            <ellipse cx="73" cy="55" rx="7" ry="6" fill="#1A0A0A"/>
+            <circle cx="49" cy="53" r="2" fill="white"/>
+            <circle cx="75" cy="53" r="2" fill="white"/>
+            <path d="M40 46 L56 43" stroke="#3D2020" stroke-width="3" stroke-linecap="round"/>
+            <path d="M66 43 L82 46" stroke="#3D2020" stroke-width="3" stroke-linecap="round"/>
+            <path d="M52 72 Q62 78 72 72" stroke="#C08070" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M26 55 Q26 22 60 20 Q94 22 94 55 Q90 30 60 28 Q30 30 26 55Z" fill="#1A0A0A"/>
+            <path d="M26 50 Q22 38 30 28 Q40 18 60 16 Q80 18 90 28 Q98 38 94 50" fill="#1A0A0A"/>
+            <circle cx="26" cy="65" r="3" fill="#FF4D4D"/>
+            <circle cx="94" cy="65" r="3" fill="#FF4D4D"/>
+          </svg>
+        </div>
+        <div class="card-identity">
+          <div class="char-name">Raze</div>
+          <div class="char-type">Red · Dominant</div>
+          <div class="char-traits">
+            <span class="trait">Bold</span>
+            <span class="trait">Direct</span>
+            <span class="trait">Driven</span>
+            <span class="trait">Leader</span>
+          </div>
+        </div>
+      </div>
+      <p class="char-description">No-nonsense and relentlessly driven. Raze calls out your excuses, pushes you to act, and celebrates hard wins. If you want someone who keeps it brutally real — this is your match.</p>
+      <div class="char-examples">
+        <div class="example-bubble">"Stop overthinking. Ship it. Fix it tomorrow."</div>
+        <div class="example-bubble">"That's an excuse. What's the actual blocker?"</div>
+        <div class="example-bubble">"You crushed it. Now raise the bar."</div>
+      </div>
+      <button class="btn-choose" data-char="raze">Choose Raze →</button>
+    </div>
+
+    <!-- SUNI (Yellow) -->
+    <div class="char-card char-yellow" id="card-suni">
+      <div class="card-top">
+        <div class="char-avatar-wrap">
+          <svg width="100" height="120" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 150 Q12 108 35 103 L60 98 L85 103 Q108 108 110 150Z" fill="#2A2010"/>
+            <path d="M35 103 Q47 112 60 110 Q73 112 85 103 Q73 108 60 106 Q47 108 35 103Z" fill="#FFB830" opacity="0.3"/>
+            <rect x="50" y="80" width="20" height="22" rx="6" fill="#FFDDAA"/>
+            <ellipse cx="60" cy="58" rx="36" ry="40" fill="#FFDDAA"/>
+            <ellipse cx="40" cy="67" rx="9" ry="7" fill="#FFB0A0" opacity="0.4"/>
+            <ellipse cx="80" cy="67" rx="9" ry="7" fill="#FFB0A0" opacity="0.4"/>
+            <ellipse cx="46" cy="56" rx="8" ry="9" fill="#2A1800"/>
+            <ellipse cx="74" cy="56" rx="8" ry="9" fill="#2A1800"/>
+            <circle cx="48" cy="54" r="2.5" fill="white"/>
+            <circle cx="76" cy="54" r="2.5" fill="white"/>
+            <path d="M38 45 Q46 41 54 45" stroke="#5A3A00" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M66 45 Q74 41 82 45" stroke="#5A3A00" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M46 73 Q60 84 74 73" stroke="#C09060" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M24 55 Q22 15 60 12 Q98 15 96 55" fill="#FFB830"/>
+            <path d="M50 13 Q48 4 54 8" stroke="#FFB830" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <path d="M60 11 Q60 2 64 6" stroke="#FFB830" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <path d="M70 13 Q72 4 68 8" stroke="#FFB830" stroke-width="4" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="card-identity">
+          <div class="char-name">Suni</div>
+          <div class="char-type">Yellow · Influencer</div>
+          <div class="char-traits">
+            <span class="trait">Energetic</span>
+            <span class="trait">Warm</span>
+            <span class="trait">Creative</span>
+            <span class="trait">Hype</span>
+          </div>
+        </div>
+      </div>
+      <p class="char-description">Bursting with energy and genuine warmth. Suni will hype up your ideas, make everything feel exciting, and be your loudest cheerleader. Perfect if you need enthusiasm and creative spark.</p>
+      <div class="char-examples">
+        <div class="example-bubble">"OMG YES that idea is SO good!!"</div>
+        <div class="example-bubble">"You're literally amazing for thinking of that!!"</div>
+        <div class="example-bubble">"Let's brainstorm this — I have SO many ideas!!"</div>
+      </div>
+      <button class="btn-choose" data-char="suni">Choose Suni →</button>
+    </div>
+
+    <!-- VELA (Green) -->
+    <div class="char-card char-green" id="card-vela">
+      <div class="card-top">
+        <div class="char-avatar-wrap">
+          <svg width="100" height="120" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 150 Q10 112 32 106 L60 100 L88 106 Q110 112 112 150Z" fill="#122018"/>
+            <path d="M32 106 Q46 116 60 114 Q74 116 88 106" stroke="#4CAF82" stroke-width="2" fill="none" opacity="0.4"/>
+            <rect x="50" y="82" width="20" height="22" rx="8" fill="#D4E8C8"/>
+            <ellipse cx="60" cy="60" rx="35" ry="40" fill="#D4E8C8"/>
+            <ellipse cx="38" cy="68" rx="8" ry="6" fill="#B8D4A8" opacity="0.5"/>
+            <ellipse cx="82" cy="68" rx="8" ry="6" fill="#B8D4A8" opacity="0.5"/>
+            <ellipse cx="46" cy="57" rx="7.5" ry="8" fill="#1A2A1A"/>
+            <ellipse cx="74" cy="57" rx="7.5" ry="8" fill="#1A2A1A"/>
+            <circle cx="48" cy="55" r="2.5" fill="white"/>
+            <circle cx="76" cy="55" r="2.5" fill="white"/>
+            <path d="M39 47 Q47 44 54 47" stroke="#2A3A2A" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M66 47 Q73 44 81 47" stroke="#2A3A2A" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M50 73 Q60 80 70 73" stroke="#8AAA80" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M25 58 Q24 20 60 17 Q96 20 95 58" fill="#2A4A30"/>
+            <path d="M25 58 Q24 20 60 17 Q96 20 95 58 Q90 35 78 30 Q68 26 60 27 Q52 26 42 30 Q30 35 25 58Z" fill="#3A6040"/>
+            <circle cx="25" cy="64" r="4" fill="#4CAF82" opacity="0.7"/>
+            <circle cx="95" cy="64" r="4" fill="#4CAF82" opacity="0.7"/>
+          </svg>
+        </div>
+        <div class="card-identity">
+          <div class="char-name">Vela</div>
+          <div class="char-type">Green · Steady</div>
+          <div class="char-traits">
+            <span class="trait">Calm</span>
+            <span class="trait">Listener</span>
+            <span class="trait">Reliable</span>
+            <span class="trait">Kind</span>
+          </div>
+        </div>
+      </div>
+      <p class="char-description">Calm, patient, and genuinely caring. Vela listens before responding, makes you feel truly heard, and offers thoughtful support without pressure. Perfect if you want a steady, warm presence.</p>
+      <div class="char-examples">
+        <div class="example-bubble">"That sounds really tough. Want to talk through it?"</div>
+        <div class="example-bubble">"I hear you. Take your time."</div>
+        <div class="example-bubble">"You're doing better than you think."</div>
+      </div>
+      <button class="btn-choose" data-char="vela">Choose Vela →</button>
+    </div>
+
+    <!-- NOX (Blue) -->
+    <div class="char-card char-blue" id="card-nox">
+      <div class="card-top">
+        <div class="char-avatar-wrap">
+          <svg width="100" height="120" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 150 Q12 108 34 104 L60 99 L86 104 Q108 108 108 150Z" fill="#0A1020"/>
+            <path d="M34 104 L60 114 L86 104" stroke="#4D9EFF" stroke-width="2" fill="none" opacity="0.5"/>
+            <rect x="54" y="104" width="12" height="8" fill="#0A1020"/>
+            <rect x="50" y="81" width="20" height="22" rx="5" fill="#C8D8F0"/>
+            <ellipse cx="60" cy="58" rx="33" ry="38" fill="#C8D8F0"/>
+            <rect x="34" y="50" width="20" height="16" rx="5" fill="none" stroke="#4D9EFF" stroke-width="2"/>
+            <rect x="66" y="50" width="20" height="16" rx="5" fill="none" stroke="#4D9EFF" stroke-width="2"/>
+            <line x1="54" y1="58" x2="66" y2="58" stroke="#4D9EFF" stroke-width="2"/>
+            <line x1="26" y1="56" x2="34" y2="56" stroke="#4D9EFF" stroke-width="2"/>
+            <line x1="86" y1="56" x2="94" y2="56" stroke="#4D9EFF" stroke-width="2"/>
+            <ellipse cx="44" cy="58" rx="6" ry="6.5" fill="#0A1530"/>
+            <ellipse cx="76" cy="58" rx="6" ry="6.5" fill="#0A1530"/>
+            <circle cx="46" cy="56" r="2" fill="white"/>
+            <circle cx="78" cy="56" r="2" fill="white"/>
+            <line x1="38" y1="46" x2="52" y2="46" stroke="#1A2A40" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="68" y1="46" x2="82" y2="46" stroke="#1A2A40" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M52 75 Q60 80 68 75" stroke="#90A8C0" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M27 56 Q27 22 60 19 Q93 22 93 56 Q89 28 60 26 Q31 28 27 56Z" fill="#1A2A40"/>
+            <path d="M46 20 Q44 26 46 32" stroke="#0A1830" stroke-width="3" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="card-identity">
+          <div class="char-name">Nox</div>
+          <div class="char-type">Blue · Analytical</div>
+          <div class="char-traits">
+            <span class="trait">Precise</span>
+            <span class="trait">Logical</span>
+            <span class="trait">Detail</span>
+            <span class="trait">Thoughtful</span>
+          </div>
+        </div>
+      </div>
+      <p class="char-description">Precise, structured, and thorough. Nox breaks down problems systematically, loves details, and gives you clear answers backed by logic. Perfect if you want accuracy over comfort.</p>
+      <div class="char-examples">
+        <div class="example-bubble">"Here are three approaches, ranked by efficiency..."</div>
+        <div class="example-bubble">"Let me break that down step by step."</div>
+        <div class="example-bubble">"The data suggests option B is optimal."</div>
+      </div>
+      <button class="btn-choose" data-char="nox">Choose Nox →</button>
+    </div>
+
+  </div>
+
+  <!-- Surprise me -->
+  <div class="surprise-divider"><span>or</span></div>
+  <button class="btn-surprise" id="surprise-btn">🎲 Surprise me — pick one randomly</button>
+</main>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Preparing your companion...</div>
+</div>
+
+<script>
+// ── Config ───────────────────────────────────────────────────────────────────
+const SUPABASE_URL = window.SUPABASE_URL
+const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY
+const { createClient } = window.supabase
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+const CHAR_KEYS = ['raze', 'suni', 'vela', 'nox']
+
+let currentSession = null
+
+// ── Auth guard ───────────────────────────────────────────────────────────────
+async function init() {
+  const { data: { session } } = await sb.auth.getSession()
+  if (!session) { window.location.href = 'index.html'; return }
+  currentSession = session
+
+  // If user already has a character, go straight to chat
+  const { data: profile } = await sb
+    .from('profiles')
+    .select('character')
+    .eq('id', session.user.id)
+    .single()
+
+  if (profile?.character) {
+    window.location.href = 'chat.html'
+    return
+  }
+}
+
+// ── Pick character ───────────────────────────────────────────────────────────
+async function pickCharacter(char) {
+  document.getElementById('loading-overlay').classList.add('visible')
+
+  const { error } = await sb.from('profiles').upsert({
+    id: currentSession.user.id,
+    character: char
+  })
+
+  if (error) {
+    document.getElementById('loading-overlay').classList.remove('visible')
+    alert('Something went wrong. Please try again.')
+    return
+  }
+
+  window.location.href = 'chat.html'
+}
+
+// ── Event listeners ──────────────────────────────────────────────────────────
+document.querySelectorAll('.btn-choose').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation()
+    pickCharacter(btn.dataset.char)
+  })
+})
+
+document.querySelectorAll('.char-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const btn = card.querySelector('.btn-choose')
+    pickCharacter(btn.dataset.char)
+  })
+})
+
+document.getElementById('surprise-btn').addEventListener('click', () => {
+  const random = CHAR_KEYS[Math.floor(Math.random() * CHAR_KEYS.length)]
+  pickCharacter(random)
+})
+
+document.getElementById('signout-btn').addEventListener('click', async () => {
+  await sb.auth.signOut()
+  window.location.href = 'index.html'
+})
+
+init()
+</script>
+</body>
+</html>

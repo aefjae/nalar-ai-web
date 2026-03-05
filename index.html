@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Auri — Your AI with Personality</title>
 <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -665,7 +667,7 @@ footer {
       <div class="auth-title">Get your companion</div>
       <div class="auth-sub">Sign in to meet your Auri</div>
 
-      <button class="btn-google">
+      <button class="btn-google" id="google-btn">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -678,12 +680,13 @@ footer {
       <div class="divider"><span>or</span></div>
 
       <div class="input-group">
-        <input class="input-field" type="email" placeholder="your@email.com"/>
-        <input class="input-field" type="password" placeholder="Password"/>
-        <button class="btn-email">Continue with Email →</button>
+        <input class="input-field" id="email-input" type="email" placeholder="your@email.com" autocomplete="email"/>
+        <input class="input-field" id="password-input" type="password" placeholder="Password" autocomplete="current-password"/>
+        <button class="btn-email" id="email-btn">Continue with Email →</button>
       </div>
 
-      <p class="auth-terms">By continuing, you agree to our Terms of Service and Privacy Policy.</p>
+      <div id="auth-error" style="font-size:13px;color:#FF4D4D;text-align:center;margin-top:8px;min-height:18px;"></div>
+      <p class="auth-terms">By continuing, you agree to our <a href="terms.html" style="color:inherit;text-decoration:underline">Terms of Service</a> and <a href="privacy.html" style="color:inherit;text-decoration:underline">Privacy Policy</a>.</p>
     </div>
   </div>
 
@@ -992,7 +995,88 @@ footer {
 </footer>
 
 <script>
-// Custom cursor
+// ── Supabase config ──────────────────────────────────────────────────────────
+// Replace these with your actual Supabase project values
+const SUPABASE_URL = window.SUPABASE_URL
+const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY
+const { createClient } = window.supabase
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+// ── Auth routing ─────────────────────────────────────────────────────────────
+async function routeAuthedUser(session) {
+  const { data } = await sb
+    .from('profiles')
+    .select('character')
+    .eq('id', session.user.id)
+    .single()
+  window.location.href = data?.character ? 'chat.html' : 'character-select.html'
+}
+
+// Check existing session on load
+sb.auth.getSession().then(({ data: { session } }) => {
+  if (session) routeAuthedUser(session)
+})
+
+// ── Google OAuth ─────────────────────────────────────────────────────────────
+document.getElementById('google-btn').addEventListener('click', async () => {
+  setLoading(true)
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: 'google',
+    // IMPORTANT: Add this URL to your Supabase Auth → URL Configuration → Redirect URLs
+    options: { redirectTo: window.location.origin + '/character-select.html' }
+  })
+  if (error) { showError(error.message); setLoading(false) }
+})
+
+// ── Email / password ─────────────────────────────────────────────────────────
+document.getElementById('email-btn').addEventListener('click', async () => {
+  const email = document.getElementById('email-input').value.trim()
+  const password = document.getElementById('password-input').value
+  if (!email) { showError('Please enter your email address.'); return }
+  if (!password) { showError('Please enter a password.'); return }
+
+  clearError()
+  setBtnText('Loading...')
+  setLoading(true)
+
+  // Try sign in first; if credentials wrong, try sign up (new user flow)
+  let { data, error } = await sb.auth.signInWithPassword({ email, password })
+
+  if (error) {
+    // "Invalid login credentials" → account may not exist yet → try sign up
+    if (error.message.toLowerCase().includes('invalid')) {
+      const res = await sb.auth.signUp({ email, password })
+      data = res.data
+      error = res.error
+      // Supabase requires email confirmation by default — handle that case
+      if (!error && !res.data.session) {
+        showError('Check your email to confirm your account, then sign in.')
+        setBtnText('Continue with Email →')
+        setLoading(false)
+        return
+      }
+    }
+  }
+
+  if (error) {
+    showError(error.message)
+    setBtnText('Continue with Email →')
+    setLoading(false)
+    return
+  }
+
+  if (data?.session) routeAuthedUser(data.session)
+})
+
+function showError(msg) { document.getElementById('auth-error').textContent = msg }
+function clearError() { document.getElementById('auth-error').textContent = '' }
+function setBtnText(t) { document.getElementById('email-btn').textContent = t }
+function setLoading(on) {
+  document.getElementById('google-btn').disabled = on
+  document.getElementById('email-btn').disabled = on
+}
+
+// ── Custom cursor ────────────────────────────────────────────────────────────
 const cursor = document.getElementById('cursor')
 const ring = document.getElementById('cursorRing')
 let mx = 0, my = 0, rx = 0, ry = 0
@@ -1027,7 +1111,7 @@ document.querySelectorAll('button, a, .char-card, .integration-card').forEach(el
   })
 })
 
-// Scroll reveal
+// ── Scroll reveal ────────────────────────────────────────────────────────────
 const observer = new IntersectionObserver(entries => {
   entries.forEach((entry, i) => {
     if (entry.isIntersecting) {

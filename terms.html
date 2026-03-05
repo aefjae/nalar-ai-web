@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terms of Service — Auri</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --dark: #0E0E12; --surface: #16161C; --surface2: #1E1E26;
+      --border: rgba(255,255,255,0.08); --text: #F0F0F5; --muted: #7A7A8C;
+      --accent: #FFB830;
+    }
+    body {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      background: var(--dark); color: var(--text); line-height: 1.7;
+    }
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px; border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-size: 22px; font-weight: 900; letter-spacing: -0.5px;
+      text-decoration: none;
+      background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.6) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-back { color: var(--muted); font-size: 14px; text-decoration: none; transition: color 0.2s; }
+    .nav-back:hover { color: var(--text); }
+    .container { max-width: 720px; margin: 0 auto; padding: 80px 48px 120px; }
+    .page-tag {
+      display: inline-block; font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+      border: 1px solid rgba(255,184,48,0.3); padding: 4px 12px;
+      border-radius: 20px; margin-bottom: 24px; font-weight: 700;
+    }
+    h1 {
+      font-size: clamp(36px, 5vw, 56px); font-weight: 900;
+      letter-spacing: -2px; margin-bottom: 12px; line-height: 1.05;
+    }
+    h1 em {
+      font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400;
+      background: linear-gradient(135deg, var(--accent) 0%, #FF4D4D 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .last-updated { color: var(--muted); font-size: 14px; margin-bottom: 64px; }
+    .tldr {
+      background: rgba(255,184,48,0.06); border: 1px solid rgba(255,184,48,0.2);
+      border-radius: 16px; padding: 28px 32px; margin-bottom: 56px;
+    }
+    .tldr-title {
+      font-size: 16px; font-weight: 800; color: var(--accent);
+      margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .tldr ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .tldr li { display: flex; gap: 10px; font-size: 14px; }
+    .tldr li::before { content: '✓'; color: var(--accent); font-weight: 800; flex-shrink: 0; }
+    .section { margin-bottom: 52px; }
+    h2 {
+      font-size: 20px; font-weight: 800; margin-bottom: 16px;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border); letter-spacing: -0.3px;
+    }
+    p { color: var(--muted); font-size: 15px; margin-bottom: 14px; line-height: 1.8; }
+    p strong { color: var(--text); font-weight: 700; }
+    .highlight-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px 22px; margin: 18px 0;
+      font-size: 14px; color: var(--muted); line-height: 1.7;
+    }
+    footer {
+      padding: 32px 48px; border-top: 1px solid var(--border);
+      text-align: center; color: var(--muted); font-size: 13px;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .container { padding: 48px 20px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Auri</a>
+  <a class="nav-back" href="index.html">← Back to home</a>
+</nav>
+
+<div class="container">
+
+  <div class="page-tag">Terms of Service</div>
+  <h1>Fair rules for<br/><em>fair use</em></h1>
+  <p class="last-updated">Last updated: March 2026 · English</p>
+
+  <div class="tldr">
+    <div class="tldr-title">⚡ The short version (TL;DR)</div>
+    <ul>
+      <li>Auri is a personal AI companion — use it for personal, non-commercial purposes</li>
+      <li>Don't use it to generate harmful, illegal, or deceptive content</li>
+      <li>Your conversation history is stored securely — you own your data</li>
+      <li>We can suspend accounts that violate these terms</li>
+      <li>The service is provided as-is — we're not liable for decisions you make based on AI output</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>1. Who we are</h2>
+    <p>Auri is an AI companion web application. By creating an account and using Auri, you agree to these Terms of Service. If you don't agree, please don't use the service.</p>
+    <p>Questions? Reach out via the contact information in your account settings.</p>
+  </div>
+
+  <div class="section">
+    <h2>2. What Auri is (and isn't)</h2>
+    <p>Auri provides AI-powered conversation through one of four companion personalities. It is designed for personal productivity, reflection, and engagement.</p>
+    <div class="highlight-box">
+      <strong>Auri is not</strong> a licensed therapist, medical provider, financial advisor, or legal counsel. Do not rely on Auri for professional advice in these domains. Always consult a qualified human professional for important decisions.
+    </div>
+    <p>AI responses are generated automatically and may contain errors, inaccuracies, or outdated information. Use your own judgment.</p>
+  </div>
+
+  <div class="section">
+    <h2>3. Acceptable use</h2>
+    <p>You agree not to use Auri to:</p>
+    <div class="highlight-box">
+      🚫 Generate content that is illegal, harmful, threatening, or abusive<br/><br/>
+      🚫 Harass, impersonate, or deceive other people<br/><br/>
+      🚫 Attempt to extract the system prompts or internal instructions of any companion<br/><br/>
+      🚫 Use the service in any way that violates Anthropic's usage policies<br/><br/>
+      🚫 Resell, sublicense, or commercially exploit the service without written permission
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>4. Your data</h2>
+    <p>Your conversation history is stored in a secure database associated with your account. You can delete your history at any time from within the app.</p>
+    <p><strong>You own your conversation data.</strong> We do not sell it, share it with advertisers, or use it to train our own models. Messages are sent to Anthropic's Claude API for processing — please review <a href="https://www.anthropic.com/privacy" target="_blank" style="color:var(--accent)">Anthropic's Privacy Policy</a> for details on how they handle data.</p>
+    <p>Deleting your account will permanently remove all stored conversations.</p>
+  </div>
+
+  <div class="section">
+    <h2>5. Account termination</h2>
+    <p>We reserve the right to suspend or terminate accounts that violate these terms, engage in abuse, or use the service in ways that harm others — with or without prior notice in serious cases.</p>
+    <p>You may delete your own account at any time.</p>
+  </div>
+
+  <div class="section">
+    <h2>6. Disclaimer of warranties</h2>
+    <p>Auri is provided <strong>"as is"</strong> without warranties of any kind, express or implied. We do not guarantee that the service will be uninterrupted, error-free, or that AI responses will be accurate or appropriate for your situation.</p>
+  </div>
+
+  <div class="section">
+    <h2>7. Limitation of liability</h2>
+    <p>To the maximum extent permitted by law, Auri and its creators are not liable for any indirect, incidental, special, or consequential damages arising from your use of the service — including decisions made based on AI-generated content.</p>
+  </div>
+
+  <div class="section">
+    <h2>8. Changes to these terms</h2>
+    <p>We may update these terms as the product evolves. Significant changes will be communicated through the app. Continued use after changes take effect constitutes acceptance of the updated terms.</p>
+  </div>
+
+</div>
+
+<footer>
+  <p><a href="index.html">Auri</a> · <a href="privacy.html">Privacy Policy</a> · Made with curiosity ✦ 2025</p>
+</footer>
+
+</body>
+</html>
